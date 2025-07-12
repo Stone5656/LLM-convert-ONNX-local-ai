@@ -1,0 +1,6 @@
+RakutenAI/*
+build/*
+.txt
+models/*
+.vscode/*
+__pycache__/*
