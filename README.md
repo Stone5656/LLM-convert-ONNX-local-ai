@@ -20,18 +20,15 @@
 
 ```powershell
 # 1‑1. uv をグローバルにインストール（初回のみ）
-pip install --upgrade uv
-# or: winget install AstralSoftware.uv
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+# or: pip install uv
+# or: winget install --id=astral-sh.uv  -e
 ```
 
 ### 1‑2. プロジェクト用仮想環境
 
 ```powershell
-uv venv                      # .\.venv を作成
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-.\.venv\Scripts\Activate.ps1  # PowerShell
-# (cmd.exe の場合) .\.venv\Scripts\activate.bat
-uv pip install -r requirements.txt
+uv sync
 ```
 
 ---
@@ -39,7 +36,7 @@ uv pip install -r requirements.txt
 ## 2. ONNX 変換
 
 ```powershell
-python convert_to_onnx.py \
+uv run python convert_to_onnx.py \
     --model-id rinna/japanese-gpt2-small \
     --output ./onnx_rinna
 ```
@@ -49,7 +46,7 @@ python convert_to_onnx.py \
 ## 3. IR 生成 + 量子化（INT8 / INT4）
 
 ```powershell
-python quantize_to_int8.py \
+uv run python quantize_to_int8.py \
     --onnx   ./onnx_rinna/model.onnx \
     --output ./ir_int8_rinna
 ```
@@ -71,7 +68,7 @@ mode = CompressWeightsMode.INT8_SYM
 ## 4. LangChain で GPU 推論
 
 ```powershell
-python infer_openvino.py \
+uv run python infer_openvino.py \
     --ir        ./ir_int8_rinna \
     --tokenizer ./onnx_rinna/tokenizer \
     --device    GPU
