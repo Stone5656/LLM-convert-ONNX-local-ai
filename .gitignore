@@ -4,3 +4,4 @@ build/*
 models/*
 .vscode/*
 __pycache__/*
+.venv
